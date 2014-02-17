@@ -1,4 +1,4 @@
-"""to do 
+to do 
 
 instead of using subtitle.cmd use this file itself
 add proxy error such as 10060 or 10061 and retry 2or 3 times again
@@ -15,9 +15,9 @@ add debug drop.
 
 not a necessity:
 make a .dll file or .exe file so that user don't need to downlaod python
-"""
 
-"""replace = [".avi","1.4","5.1","-","DVDRip","BRRip","XviD","1CDRip","aXXo","[","]","(",")","{","}","{{","}}"
+
+replace = [".avi","1.4","5.1","-","DVDRip","BRRip","XviD","1CDRip","aXXo","[","]","(",")","{","}","{{","}}"
     "x264","720p","StyLishSaLH (StyLish Release)","DvDScr","MP3","HDRip","WebRip",
     "ETRG","YIFY","StyLishSaLH","StyLish Release","TrippleAudio","EngHindiIndonesian",
     "385MB","CooL GuY","a2zRG","x264","Hindi","AAC","AC3","MP3"," R6","HDRip","H264","ESub","AQOS",
@@ -34,6 +34,3 @@ make a .dll file or .exe file so that user don't need to downlaod python
     "Exclusive","171","DiDee","v2"
 
     ]
-
-
-"""
