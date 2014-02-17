@@ -1,18 +1,26 @@
+
+"""Proxy settings"""
+proxy_url=''
+username=''
+password=''
+
+
+"""Code begins"""
 import os
 import hashlib
 import urllib2
 import sys
-
-
-proxy_url=''
-username=''
-password=''
-if username is not '':
+if proxy_url is '':
+    proxy_str=''
+    proxy_dict={}
+elif username is not '':
     proxy_str='http://'+username+':'+password+'@'+proxy_url
+    proxy_dict={'http':proxy_str}
 else:
     proxy_str='http://'+proxy_url
-print proxy_str
-proxy = urllib2.ProxyHandler({'http': proxy_str})
+    proxy_dict={'http':proxy_str}
+
+proxy = urllib2.ProxyHandler(proxy_dict)
 auth = urllib2.HTTPBasicAuthHandler()
 opener = urllib2.build_opener(proxy, auth, urllib2.HTTPHandler)
 urllib2.install_opener(opener)
