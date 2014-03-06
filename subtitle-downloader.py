@@ -63,9 +63,6 @@ def alt_downloader(path,filename):
     session_token=allpages['token']
     myquery={'query' : filename, 'sublanguageid' : 'all'}
     subtitles=opensubtitleconnection.SearchSubtitles( session_token, [myquery], {'limit' : 10})
-    file2=open('ip','w')
-    file2.write(str(subtitles))
-    file2.close()
     subdata=subtitles['data']
     i=0
     for di in subdata:
