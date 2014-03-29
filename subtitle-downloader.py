@@ -80,6 +80,7 @@ def sub_downloader(path):
     replace = [".avi",".mp4",".mkv",".mpg",".mpeg"]
     for content in replace:
         path = path.replace(content,"")
+    
     if not os.path.exists(path+".srt"):
         headers = { 'User-Agent' : 'SubDB/1.0 (SubDown/0.1; http://github.com/sainyamkapoor/SubDown)' }
         url = "http://api.thesubdb.com/?action=download&hash="+hash+"&language=en"
@@ -89,9 +90,11 @@ def sub_downloader(path):
         except urllib2.URLError as urler:
             
             try:
-                print("[SubDown]:Not found At Primary Location, Trying Secondary Location")
+                k=urler.code
+                print("[SubDown]: I am not able to find it\nManual Mode: ON\nPlease select the Best option as you feel like")
             except AttributeError:
-                print "[SubDown]:Internet not working or maybe unable to find  connection to primary server"
+                raw_input ("[SubDown]: Internet not working or maybe unable to find connection to primary server\nSuggestion:Try using it with Proxifier\nPress Enter to Exit")
+                exit(0)
             return 0
         
         with open (path+".srt","wb") as subtitle:
@@ -103,12 +106,12 @@ def alt_downloader(clean_path,filename,path):
     opensubtitleconnection = xmlrpclib.ServerProxy( opensubtitleurl )
     allpages = opensubtitleconnection.LogIn( '', '', 'en', 'PySubDown v1.0')
     session_token=allpages['token']
-    replace = ["Watch"]
+    replace = ["Watch" ,"youtube" ,"Youtube"]
     for content in replace:
         filename = filename.replace(content,"")
     filename = filename.replace("."," ")
     file_hash=hashFile(path)
-    print file_hash
+    
     myquery_hash={'moviehash':file_hash, 'sublanguageid' : 'eng'}
     subtitles_hash=opensubtitleconnection.SearchSubtitles( session_token, [myquery_hash], {'limit' : 100})
     subdata= subtitles_hash['data']
@@ -119,19 +122,19 @@ def alt_downloader(clean_path,filename,path):
     i=0
     
     if subdata !=False:
-        print type(subdata)
-
+        
         for di in subdata:
             di['fuzzylogic'] =fuzz.token_sort_ratio(filename,di['SubFileName'])
         subdata = sorted(subdata, key=itemgetter('fuzzylogic'),reverse=True)
         i=0
+        print "Options:"
         for di in subdata:
             if i>10:
                 break
             print str(i+1)+") :"+di['SubFileName']
             subtitlesids[i]=di['IDSubtitleFile']
             i+=1
-        inp=int(raw_input("Enter the one you would like to download:"))
+        inp=int(raw_input("\nEnter the one you would like to download:"))
 
         subdo=opensubtitleconnection.DownloadSubtitles(session_token, [subtitlesids[inp-1]] )
         # this is the variable with your file's contents    
@@ -151,19 +154,41 @@ def alt_downloader(clean_path,filename,path):
         file2.write(str(orig_file_cont))
         file2.close()
     else:
-        raw_input("[SubDown]:Sorry I am Unable to Find it anyplace i know of\nPress Enter to exit")
+        raw_input("[SubDown]: Sorry I am Unable to Find it anyplace i know of\nPress Enter to exit")
 
 
     logout=opensubtitleconnection.LogOut( session_token )
 if __name__=='__main__': 
     path = sys.argv[1]
     filename=path.split('\\')[-1]
-
+    
     replace = [".avi",".mp4",".mkv",".mpg",".mpeg"]
+    clean_path=path
+    print """
+
+
+  _________       ___.    ________                            
+ /   _____/ __ __ \_ |__  \______ \    ____  __  _  __  ____  
+ \_____  \ |  |  \ | __ \  |    |  \  /  _ \ \ \/ \/ / /    \ 
+ /        \|  |  / | \_\ \ |    `   \(  <_> ) \     / |   |  \ 
+/_______  /|____/  |___  //_______  / \____/   \/\_/  |___|  /
+        \/             \/         \/                       \/  v0.1
+                            BY
+
+  _________        .__                                 
+ /   _____/_____   |__|  ____   ___.__._____     _____  
+ \_____  \ \__  \  |  | /    \ <   |  |\__  \   /     \ 
+ /        \ / __ \_|  ||   |  \ \___  | / __ \_|  Y Y  \ 
+/_______  /(____  /|__||___|  / / ____|(____  /|__|_|  /
+        \/      \/          \/  \/          \/       \/ 
+Visit Me at : https://sainyamkapoor.github.io
+For more info Regarding this app Visit : http://sainyamkapoor.github.io/SubDown
+
+"""
     for content in replace:
-        filename = filename.replace(content,"")
-        clean_path = path.replace(content,"")
-    print "[SubDown]:Trying to Download " +filename
+        filename = filename.replace(content,'')
+        clean_path = clean_path.replace(content,"")
+    print "[SubDown]: Trying to Download " +filename
     if os.path.exists(clean_path+".srt"):
         ans=str(raw_input("Looks Like the SRT file exist\nWould You like To delete that file and Download a new one? :"))
         ans=ans.lower()
@@ -171,5 +196,5 @@ if __name__=='__main__':
             os.remove(clean_path+".srt")
         else :
             exit(0)
-    if not sub_downloader(path):
+    if sub_downloader(path)==0:
         alt_downloader(clean_path,filename,path)
