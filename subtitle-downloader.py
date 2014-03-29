@@ -91,7 +91,7 @@ def sub_downloader(path):
             
             try:
                 k=urler.code
-                print("[SubDown]: I am not able to find it\nManual Mode: ON\nPlease select the Best option as you feel like")
+                print("[SubDown]: I am not able to find it\nManual Mode:ON\nPlease select the Best option as you feel like")
             except AttributeError:
                 raw_input ("[SubDown]: Internet not working or maybe unable to find connection to primary server\nSuggestion:Try using it with Proxifier\nPress Enter to Exit")
                 exit(0)
