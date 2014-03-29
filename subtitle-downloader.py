@@ -131,7 +131,10 @@ def alt_downloader(clean_path,filename,path):
         for di in subdata:
             if i>10:
                 break
-            print str(i+1)+") :"+di['SubFileName']
+            try :
+                print str(i+1)+") :"+di['SubFileName']
+            except UnicodeEncodeError:
+                continue #add unicode support here
             subtitlesids[i]=di['IDSubtitleFile']
             i+=1
         inp=int(raw_input("\nEnter the one you would like to download:"))
