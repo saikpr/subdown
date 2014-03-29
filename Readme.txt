@@ -4,3 +4,7 @@ Forked from https://github.com/manojmj92/subtitle-downloader
 Dirs:
 	testing\ 
 		it consists of some random code snippets
+
+
+to create exe use 
+python setup.py py2exe

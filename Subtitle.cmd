@@ -4,7 +4,7 @@ set PATH=%PATH%;C:\Python27\
 :MY_LOOP
 IF %1=="" GOTO EXIT_LOOP
 
-python S:\personal\SubDown\subtitle-downloader.py %1 
+S:\Personal\SubDown\dist\subtitle-downloader.exe %1 
 SHIFT
 GOTO MY_LOOP
 
