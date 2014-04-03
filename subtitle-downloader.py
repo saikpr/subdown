@@ -3,6 +3,9 @@ Subtitle-Downloader v1.0
 Name:Sainyam Kapoor
 Use:Used to Download subtitles from subdb and opensubtitles.org
 
+
+Code for Converting Base64 of gzip file to normal text copied from 
+http://stackoverflow.com/questions/10577385/putting-gzipped-data-into-a-script-as-a-string
 """
 """Proxy settings"""
 proxy_url=''
