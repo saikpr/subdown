@@ -4,7 +4,7 @@ language: python
 before_script: mkdir -p shippable/codecoverage shippable/testresults
 install: pip install --use-mirrors -r requirements.txt
 script:
-	- python setup.py py2exe
+	- python setup.py build
 
   email:
     - sainyamkapoor@yahoo.com
