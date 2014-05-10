@@ -5,10 +5,16 @@ setup(console=['subtitle-downloader.py'])
 """
 
 import sys
+from subdown_version import __version__
 from cx_Freeze import setup, Executable
 
 setup(
     name = "SubDown",
-    version = "0.1",
-    description = "subtitle-downloader",
-    executables = [Executable("subtitle-downloader.py")])
+    version=__version__,
+    description='Subtitle Downloader',
+    long_description='Small program to download subtitles for video',
+    url='https://github.com/sainyamkapoor/SubDown',
+    author='Sainyam Kapoor',
+    author_email='sainyamkapoor@yahoo.com',
+    options = {'build_exe': {'init_script':'Console','optimize':'2'}},
+    executables = [Executable("subdown.py")])
