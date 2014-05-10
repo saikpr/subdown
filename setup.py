@@ -11,4 +11,4 @@ setup(
     name = "SubDown",
     version = "0.1",
     description = "subtitle-downloader",
-    executables = [Executable("subtitle-downloader.py", base = "Win32GUI")])
+    executables = [Executable("subtitle-downloader.py")])
