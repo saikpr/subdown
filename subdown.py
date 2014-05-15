@@ -1,33 +1,12 @@
 from subdown_version import __version__
-introstr="""
-
-
-  _________       ___.    ________                            
- /   _____/ __ __ \_ |__  \______ \    ____  __  _  __  ____  
- \_____  \ |  |  \ | __ \  |    |  \  /  _ \ \ \/ \/ / /    \ 
- /        \|  |  / | \_\ \ |    `   \(  <_> ) \     / |   |  \ 
-/_______  /|____/  |___  //_______  / \____/   \/\_/  |___|  /
-        \/             \/         \/                       \/  v"""+__version__+"""
-                            BY
-
-  _________        .__                                 
- /   _____/_____   |__|  ____   ___.__._____     _____  
- \_____  \ \__  \  |  | /    \ <   |  |\__  \   /     \ 
- /        \ / __ \_|  ||   |  \ \___  | / __ \_|  Y Y  \ 
-/_______  /(____  /|__||___|  / / ____|(____  /|__|_|  /
-        \/      \/          \/  \/          \/       \/ 
-Visit Me at : https://sainyamkapoor.github.io
-For more info Regarding this app Visit : http://sainyamkapoor.github.io/SubDown
-
-"""
-
 """Code begins"""
-
+import wx
 from os import path, remove
-from urllib2 import ProxyHandler,HTTPBasicAuthHandler, build_opener, HTTPHandler, install_opener
+
 from sys import argv
 from sub_db_down import sub_db
 from open_sub_down import open_sub
+from urllib2 import ProxyHandler,HTTPBasicAuthHandler, build_opener, HTTPHandler, install_opener
 proxy_url=''
 username=''
 password=''
@@ -47,15 +26,16 @@ opener = build_opener(proxy, auth, HTTPHandler)
 install_opener(opener)
 
 if __name__=='__main__': 
+    
     try:
         arg_path = argv[1]
         filename=arg_path.split('\\')[-1]
     except IndexError :
-        raw_input("No arguments Passed \n Press Enter to exit")
+        print("No arguments Passed \n Press Enter to exit")
         arg_path=None
+        
     replace = [".avi",".mp4",".mkv",".mpg",".mpeg"]
     clean_path=arg_path
-    print introstr
     for content in replace:
         filename = filename.replace(content,'')
         clean_path = clean_path.replace(content,"")

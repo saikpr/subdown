@@ -17,4 +17,4 @@ setup(
     author='Sainyam Kapoor',
     author_email='sainyamkapoor@yahoo.com',
     options = {'build_exe': {'init_script':'Console','optimize':'2'}},
-    executables = [Executable("subdown.py")])
+    executables = [Executable("run_gui.py")])
