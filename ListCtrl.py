@@ -80,7 +80,7 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
             # for normal, simple columns, you can add them like this:
         self.list.InsertColumn(0, "Title")
         #self.list.InsertColumn(1, "Title")
-        #self.list.InsertColumn(2, "PerCentage Match")
+        self.list.InsertColumn(1, "PerCentage Match")
         print "\n\nInside Populate disk\n\n\n"
         print self.list_data
 
@@ -88,7 +88,7 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         for key, data in items:
             print data
             index = self.list.InsertStringItem(sys.maxint,str(data[1]))
-            #self.list.SetStringItem(index, 1,  data[1])
+            self.list.SetStringItem(index, 1,  str(data[2]))
             #self.list.SetStringItem(index, 2, str(data[2]))
             self.list.SetItemData(index, key)
 

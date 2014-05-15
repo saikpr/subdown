@@ -1,4 +1,4 @@
-import  wx
+import  wx,os
 import  wx.lib.filebrowsebutton as filebrowse
 import Process as module2
 class TestPanel(wx.Panel):
@@ -7,11 +7,11 @@ class TestPanel(wx.Panel):
         
 
         self.fbbh = filebrowse.FileBrowseButton(
-            self, -1, size=(450, -1),  changeCallback = self.fbbhCallback
+            self, -1, size=(450, -1),  changeCallback = self.fbbhCallback,  buttonText="Download Srt", labelText="Select File"
             )
             
         self.dbb = filebrowse.DirBrowseButton(
-            self, -1, size=(450, -1), changeCallback = self.dbbCallback
+            self, -1, size=(450, -1), changeCallback = self.dbbCallback,  buttonText="Download Srt", labelText="Select Folder"
             )
 
         #self.fbbh.callCallback = True
@@ -34,16 +34,24 @@ class TestPanel(wx.Panel):
             self.parent_frame.Hide()
             print "dfd"+str(value)
             #module2=__import__('Process')
-            module2.pushArgvs([value])
+            module2.pushArgv([value,value])
             
             
 
 
     def dbbCallback(self, evt):
-        #self.log.write('DirBrowseButton: %s\n' % evt.GetString())
-        print "dgdfgdfg"
-
-
+        value = evt.GetString()
+        #print value
+        #print "BOyaah"
+        list_d=[value]
+        self.parent_frame.Hide()
+        for dirname, dirnames, filenames in os.walk(value):
+            for filename in filenames:
+                if filename.split('.')[-1].lower() in ["avi","mp4","mkv","mpg","mpeg","flv"]:
+                    #print os.path.join(dirname, filename)
+                    list_d.append(os.path.join(dirname, filename))
+        print list_d
+        module2.pushFolderArgv(list_d)
 #----------------------------------------------------------------------
 def runTest(frame, nb):
     win = TestPanel(nb, -1)

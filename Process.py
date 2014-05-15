@@ -52,6 +52,7 @@ class subdubThread(threading.Thread):
          self.sndBtn=parent.sndBtn
          self.path=path
          self.alt_thread=alt_thread
+         #self.argvs=argvs
      def run(self):
         headers = { 'User-Agent' : 'SubDB/1.0 (SubDown/0.1; http://github.com/sainyamkapoor/SubDown)' }
         url = "http://api.thesubdb.com/?action=download&hash="+self.hash_data+"&language=en"
@@ -60,16 +61,23 @@ class subdubThread(threading.Thread):
             response = opener.open(req).read()
             with open (self.path+".srt","wb") as subtitle:
                 subtitle.write(response)
-            #return 1
-            self.out.AppendText("\n[subdb]:Done")
-            self.Strtbtn.Enable(False)
-            self.sndBtn.Enable(True)
+            self.out.AppendText("\n[subdb]:Done\n")
+            try:
+                self.parent.argvs=self.parent.argvs[1:]
+                self.parent.path=self.parent.argvs[0]
+
+                
+                self.parent.startdown(None)
+            except IndexError:
+                self.Strtbtn.Enable(False)
+                self.sndBtn.Enable(True)
+                self.out.AppendText("\n[subdb]:Completed\n****************************************\n")
             #return 0
         except URLError as urler:
             
             try:
                 k=urler.code
-                self.out.AppendText("[subdb]: I am not able to find it\nManual Mode:ON\nPlease select the Best option as you feel like")
+                self.out.AppendText("[opensub]:Trying ALternative Site\n")
                 self.alt_thread.start()
             except AttributeError:
                 self.out.AppendText ("\n[subdb]: Internet not working or maybe unable to find connection to primary server\nSuggestion:Try using it with Proxifier\nPress Enter to Exit")
@@ -118,7 +126,7 @@ class openSubThread(threading.Thread):
             subdata = sorted(subdata, key=itemgetter('fuzzylogic'),reverse=True)
             print subdata[0]
             i=1
-            self.out.AppendText("\nChoose the most appropriate  from List")
+            #self.out.AppendText("\nChoose the most appropriate  from List")
             for di in subdata:
                 if i>10:
                     break
@@ -148,7 +156,7 @@ class TestPanel(wx.Panel):
     def __init__(self, parent_frame, ID,argvs,app):
         
         wx.Panel.__init__(self, parent_frame, ID)
-        self.argvs=argvs
+        
         #self.Bind(wx.EVT_END_PROCESS, self.OnProcessEnded)
         self.app=app
         self.parent_frame=parent_frame
@@ -156,6 +164,7 @@ class TestPanel(wx.Panel):
             self.path=''
         else:
             self.path=argvs[1]
+            self.argvs=argvs[2:]
         #buttons and text
         prompt = wx.StaticText(self, -1, 'File Name:')
         
@@ -191,15 +200,28 @@ class TestPanel(wx.Panel):
     
     def pushArgv(self,argvs):
         self.path=argvs[0]
+        self.argvs=[]
+        #print "fsdfds"
+        #print argvs
         self.cmd.SetLabel(self.path)
         self.startdown(None)
         self.parent_frame.Show()
-
+    def pushFolderArgv(self,list_d):
+        
+        #print "fsdfds"
+        #print argvs
+        self.cmd.SetLabel(list_d[0])
+        self.parent_frame.Show()
+        print "I raeachsf here"
+        self.path=list_d[1]
+        self.argvs=list_d[1:]
+        self.startdown(None)
+        
 
     def startdown(self,evt):
         #code start
         print evt
-        self.out.AppendText("[subdb]:Trying to Download Subtitles for \n"+self.path.split("\\")[-1])
+        self.out.AppendText("[subdb]:Trying to Download Subtitles for \n"+self.path.split("\\")[-1]+'\n')
         hash_data = get_hash(self.path)
         filename=self.path.split('\\')[-1]
         replace = [".avi",".mp4",".mkv",".mpg",".mpeg"]
@@ -246,9 +268,19 @@ class TestPanel(wx.Panel):
         self.Strtbtn.Enable(False)
         self.sndBtn.Enable(True)
         self.frame1.Hide()
-        self.out.AppendText("\nDone")
-        logout=self.opensubtitleconnection.LogOut( session_token )
+        self.out.AppendText("[opensub]:Done\n")
 
+        logout=self.opensubtitleconnection.LogOut( session_token )
+        try:
+            self.argvs=self.argvs[1:]
+            self.path=self.argvs[0]
+
+            
+            self.startdown(None)
+        except IndexError:
+            self.Strtbtn.Enable(False)
+            self.sndBtn.Enable(True)
+            self.out.AppendText("\n[SubDown]:Completed\n****************************************\n")
         
 
     def OnSendText(self, evt):
@@ -274,8 +306,12 @@ def runTest(frame, nb,argvs,app):
         return win
     win = TestPanel(nb, -1,argvs,app)
     return win
-def pushArgvs(argvs):
+def pushArgv(argvs):
     global win
-    print "I have Got following "+str(argvs)
+    #print "I have Got following "+str(argvs)
     win.pushArgv(argvs)
 
+def pushFolderArgv(list_d):
+    global win
+    print "I have Got following "+str(list_d)
+    win.pushFolderArgv(list_d)
