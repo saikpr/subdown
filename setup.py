@@ -7,7 +7,9 @@ setup(console=['subtitle-downloader.py'])
 import sys
 from subdown_version import __version__
 from cx_Freeze import setup, Executable
-
+base = None
+if sys.platform == "win32":
+    base = "Win32GUI"
 setup(
     name = "SubDown",
     version=__version__,
@@ -17,4 +19,4 @@ setup(
     author='Sainyam Kapoor',
     author_email='sainyamkapoor@yahoo.com',
     options = {'build_exe': {'init_script':'Console','optimize':'2'}},
-    executables = [Executable("run_gui.py")])
+    executables = [Executable("run_gui.py", base=base)])

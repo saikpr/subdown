@@ -72,24 +72,30 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
     def newData(self,list_Data,session_token):
         self.list_data = list_Data
         self.session_token=session_token
+        if len(self.list_data)==1:
+            self.parent.downloadsubtitlefromopen(self.list_data[1][0],self.session_token)
         self.PopulateList()
 
 
     def PopulateList(self):
        
             # for normal, simple columns, you can add them like this:
+        self.list.ClearAll()
         self.list.InsertColumn(0, "Title")
         #self.list.InsertColumn(1, "Title")
         self.list.InsertColumn(1, "PerCentage Match")
-        print "\n\nInside Populate disk\n\n\n"
-        print self.list_data
+        #
+        #print "\n\nInside Populate disk\n\n\n"
+       # print self.list_data
 
         items = self.list_data.items()
         for key, data in items:
-            print data
+           # print data
+            #print sys.maxint
+           # print str(data[1])
             index = self.list.InsertStringItem(sys.maxint,str(data[1]))
             self.list.SetStringItem(index, 1,  str(data[2]))
-            #self.list.SetStringItem(index, 2, str(data[2]))
+            #self.list.SetStringItem(index, 2, str(data[0]))
             self.list.SetItemData(index, key)
 
         self.list.SetColumnWidth(0, wx.LIST_AUTOSIZE)
@@ -130,9 +136,9 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         event.Skip()
     def OnDoubleClick(self, event):
         #self.log.WriteText("OnDoubleClick item %s\n" % self.list.GetItemText(self.currentItem))
-        print "\n\n\n\n\n"
-        print "fgfd gdfgdf"
-        print self.list_data[self.currentItem+1][0]
+        #print "\n\n\n\n\n"
+        #print "fgfd gdfgdf"
+        #print self.list_data[self.currentItem+1][0]
         self.parent.downloadsubtitlefromopen(self.list_data[self.currentItem+1][0],self.session_token)
         #self.parent.killme=True
         event.Skip()

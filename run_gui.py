@@ -3,15 +3,15 @@ import time
 import sys, os
 import  wx.lib.layoutf  as layoutf
 from subdown_version import __version__
-
-
+from About import MyAboutBox
+import FileBrowseButton as module0
+import ListCtrl as module1
+import Process as module2
 class Run_GUI(wx.App,):
     global testing
-    def __init__(self, name, module0,module1,module2,argv):
+    def __init__(self, name,argv):
         self.name = name
-        self.module0 = module0
-        self.module1 = module1
-        self.module2 = module2
+        
         self.argv=argv
         wx.App.__init__(self, redirect=False)
         
@@ -30,14 +30,19 @@ class Run_GUI(wx.App,):
         item = menu.Append(wx.ID_EXIT, "E&xit\tCtrl-Q", "Exit demo")
         self.Bind(wx.EVT_MENU, self.OnExitApp, item)
         menuBar.Append(menu, "&File")
-        frame0 = wx.Frame(None, -1, self.name,pos=(100,100), style=wx.DEFAULT_FRAME_STYLE, name="run a sample")
+        frame0 = wx.Frame(None, -1, self.name,style=wx.DEFAULT_FRAME_STYLE, name="run a sample")
         frame0.CreateStatusBar()
         frame0.SetMenuBar(menuBar)
         frame0.Hide()
         frame0.Bind(wx.EVT_CLOSE, self.OnCloseFrame)
         #frame0.SetSize((400,400))
-        self.win0 = self.module0.runTest(frame0, frame0,)
-
+        about_menu = wx.Menu()
+        item_about = about_menu.Append(-1, "&About SubDown", "About SubDown")
+        self.Bind(wx.EVT_MENU, self.onAboutSubdown, item_about)
+        menuBar.Append(about_menu, "&Help")
+        self.win0 = module0.runTest(frame0, frame0,)
+        self.dlg = MyAboutBox(None)
+        
         
         menuBar2 = wx.MenuBar()
         menu = wx.Menu()
@@ -50,17 +55,21 @@ class Run_GUI(wx.App,):
         item = menu.Append(wx.ID_EXIT, "E&xit\tCtrl-Q", "Exit demo")
         self.Bind(wx.EVT_MENU, self.OnExitApp, item)
         menuBar2.Append(menu, "&File")
-        frame2 = wx.Frame(None, -1, self.name,pos=(100,100), style=wx.DEFAULT_FRAME_STYLE, name="run a sample")
+        frame2 = wx.Frame(None, -1, self.name, style=wx.DEFAULT_FRAME_STYLE, name="run a sample")
         frame2.CreateStatusBar()
+        about_menu = wx.Menu()
+        item_about = about_menu.Append(-1, "&About SubDown", "About SubDown")
+        self.Bind(wx.EVT_MENU, self.onAboutSubdown, item_about)
+        menuBar2.Append(about_menu, "&Help")
         frame2.SetMenuBar(menuBar2)
         frame2.Hide()
         #frame2.Show()
         frame2.Bind(wx.EVT_CLOSE, self.OnCloseFrame)
-        self.win2 = self.module2.runTest(frame2, frame2,self.argv,self)
-        print self.argv
+        self.win2 = module2.runTest(frame2, frame2,self.argv,self)
+        #print self.argv
         
            
-        print testing
+       # print testing
         self.frame0=frame0
         self.frame2=frame2
         if testing==0:
@@ -105,10 +114,13 @@ class Run_GUI(wx.App,):
         #frame2.
         self.SetTopWindow(frame2)
 
-       
+    def onAboutSubdown(self,evt):
+        self.dlg.ShowModal()
+        #self.dlg.Destroy()
     
     def OnExitApp(self, evt):
         self.frame.Close(True)
+        raise SystemExit
 
 
     def OnCloseFrame(self, evt):
@@ -121,13 +133,8 @@ class Run_GUI(wx.App,):
 
 def main(argv):
     name="SubDown v"+__version__
-    name0='FileBrowseButton'
-    name1='ListCtrl'
-    name2='Process'
-    module0 = __import__(name0)
-    module1=__import__(name1)
-    module2=__import__(name2)
-    app = Run_GUI(name, module0,module1,module2,argv)
+    
+    app = Run_GUI(name,argv)
     app.MainLoop()
 
 

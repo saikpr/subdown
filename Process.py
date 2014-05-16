@@ -61,7 +61,7 @@ class subdubThread(threading.Thread):
             response = opener.open(req).read()
             with open (self.path+".srt","wb") as subtitle:
                 subtitle.write(response)
-            self.out.AppendText("\n[subdb]:Done\n")
+            self.out.AppendText("[subdb]:Downloaded!\n\n")
             try:
                 self.parent.argvs=self.parent.argvs[1:]
                 self.parent.path=self.parent.argvs[0]
@@ -71,29 +71,30 @@ class subdubThread(threading.Thread):
             except IndexError:
                 self.Strtbtn.Enable(False)
                 self.sndBtn.Enable(True)
-                self.out.AppendText("\n[subdb]:Completed\n****************************************\n")
+                self.out.AppendText("\n[SubDown]:Completed!\n\n************************************************\n")
             #return 0
         except URLError as urler:
             
             try:
                 k=urler.code
-                self.out.AppendText("[opensub]:Trying ALternative Site\n")
+                self.out.AppendText("[opensub]:Trying Alternative Site now!\n")
                 self.alt_thread.start()
             except AttributeError:
-                self.out.AppendText ("\n[subdb]: Internet not working or maybe unable to find connection to primary server\nSuggestion:Try using it with Proxifier\nPress Enter to Exit")
-
+                self.out.AppendText ("\n[SubDown]:Jim I am Sorry, I am unable to find any internet connection. :( :(\nJim You might want to use Subdown Along with proxifier(If know what it is)\nPress Done to Exit")
+                self.Strtbtn.Enable(False)
+                self.sndBtn.Enable(True)
             
 
 class openSubThread(threading.Thread):
      global opener
-     def __init__(self,clean_path,filename,path,out,opensubtitleconnection,frame1):
+     def __init__(self,clean_path,filename,path,out,opensubtitleconnection,frame1,parent):
          threading.Thread.__init__(self)
          self.clean_path=clean_path
          self.filename=filename
          self.path=path
          self.out=out
          self.frame1=frame1
-         
+         self.parent=parent
          self.opensubtitleconnection=opensubtitleconnection
      def run(self):
         
@@ -124,7 +125,7 @@ class openSubThread(threading.Thread):
                 di['fuzzylogic'] =fuzz.token_sort_ratio(self.filename,di['SubFileName'])
                 
             subdata = sorted(subdata, key=itemgetter('fuzzylogic'),reverse=True)
-            print subdata[0]
+            #print subdata[0]
             i=1
             #self.out.AppendText("\nChoose the most appropriate  from List")
             for di in subdata:
@@ -136,9 +137,10 @@ class openSubThread(threading.Thread):
                 except UnicodeEncodeError:
                     continue #add unicode support here
                 
-            print list_Data
+            #print list_Data
             
-            
+            if len(list_Data)==1:
+                self.out.AppendText("[opensub]:Downloading the Most Appropriate SRT automatically.\n ")
             self.frame1.Show()
             
 
@@ -148,8 +150,17 @@ class openSubThread(threading.Thread):
             
         else:
             ##say sorry can't find it
-            self.out.AppendText("Sorry can't find")#inp=int(raw_input("\nEnter the one you would like to download:"))
+            self.out.AppendText("[SubDown]:Jim I am Sorry, I am unable to find it. :( :(\n\n ")#inp=int(raw_input("\nEnter the one you would like to download:"))
+            try:
+                self.parent.argvs=self.parent.argvs[1:]
+                self.parent.path=self.parent.argvs[0]
 
+                
+                self.parent.startdown(None)
+            except IndexError:
+                self.parentStrtbtn.Enable(False)
+                self.parentsndBtn.Enable(True)
+                self.out.AppendText("\n[SubDown]:Completed\n\n************************************************\n")
 
 class TestPanel(wx.Panel):
     
@@ -195,7 +206,11 @@ class TestPanel(wx.Panel):
 
         self.SetSizer(sizer)
         self.SetAutoLayout(True)
-        
+        frame1 = wx.Frame(None, -1, "List", style=wx.DEFAULT_FRAME_STYLE, name="run a sample")
+        self.frame1=frame1
+        self.frame1.Bind(wx.EVT_CLOSE, self.OnCloseFrame)
+        self.frame1.Hide()
+        win1 = module1.runTest(self,self.app, self.frame1)
         #self.startdown(None)
     
     def pushArgv(self,argvs):
@@ -212,7 +227,7 @@ class TestPanel(wx.Panel):
         #print argvs
         self.cmd.SetLabel(list_d[0])
         self.parent_frame.Show()
-        print "I raeachsf here"
+        #print "I raeachsf here"
         self.path=list_d[1]
         self.argvs=list_d[1:]
         self.startdown(None)
@@ -220,8 +235,8 @@ class TestPanel(wx.Panel):
 
     def startdown(self,evt):
         #code start
-        print evt
-        self.out.AppendText("[subdb]:Trying to Download Subtitles for \n"+self.path.split("\\")[-1]+'\n')
+        #print evt
+        self.out.AppendText("[SubDown]:Trying to Download Subtitles for \n"+self.path.split("\\")[-1]+'.\n')
         hash_data = get_hash(self.path)
         filename=self.path.split('\\')[-1]
         replace = [".avi",".mp4",".mkv",".mpg",".mpeg"]
@@ -233,18 +248,14 @@ class TestPanel(wx.Panel):
         
         opensubtitleurl = "http://api.opensubtitles.org/xml-rpc"
         self.opensubtitleconnection = ServerProxy( opensubtitleurl )
-        frame1 = wx.Frame(None, -1, "List",pos=(100,100), style=wx.DEFAULT_FRAME_STYLE, name="run a sample")
-        self.frame1=frame1
-        self.frame1.Bind(wx.EVT_CLOSE, self.OnCloseFrame)
-        self.frame1.Hide()
-        win1 = module1.runTest(self,self.app, self.frame1)
-        alt_thread=openSubThread(clean_path,filename,self.path,self.out,self.opensubtitleconnection,self.frame1)
+        
+        alt_thread=openSubThread(clean_path,filename,self.path,self.out,self.opensubtitleconnection,self.frame1,self)
         thread=subdubThread(hash_data,self,clean_path,alt_thread)
         thread.start()
     def downloadsubtitlefromopen(self,IDSubtitleFile,session_token):
-        print IDSubtitleFile
-        print "dsfsdf"
-        print session_token
+        self.frame1.Hide()
+        #print "Download" + str(IDSubtitleFile)
+        #print session_token
         subdo=self.opensubtitleconnection.DownloadSubtitles(session_token, [IDSubtitleFile] )
         # this is the variable with your file's contents    
         #print subdo
@@ -265,10 +276,10 @@ class TestPanel(wx.Panel):
         file2.write(str(orig_file_cont))
         file2.close()
     
-        self.Strtbtn.Enable(False)
-        self.sndBtn.Enable(True)
-        self.frame1.Hide()
-        self.out.AppendText("[opensub]:Done\n")
+        #self.Strtbtn.Enable(False)
+        #self.sndBtn.Enable(True)
+        
+        self.out.AppendText("[opensub]:Downloaded!\n\n")
 
         logout=self.opensubtitleconnection.LogOut( session_token )
         try:
@@ -280,7 +291,7 @@ class TestPanel(wx.Panel):
         except IndexError:
             self.Strtbtn.Enable(False)
             self.sndBtn.Enable(True)
-            self.out.AppendText("\n[SubDown]:Completed\n****************************************\n")
+            self.out.AppendText("\n[SubDown]:Completed!\n****************************************\n")
         
 
     def OnSendText(self, evt):
@@ -291,8 +302,7 @@ class TestPanel(wx.Panel):
         raise SystemExit
   
     def OnCloseFrame(self, evt):
-        if hasattr(self, "window") and hasattr(self.window, "ShutdownDemo"):
-            self.window.ShutdownDemo()
+        
         evt.Skip()
         raise SystemExit
 
@@ -313,5 +323,5 @@ def pushArgv(argvs):
 
 def pushFolderArgv(list_d):
     global win
-    print "I have Got following "+str(list_d)
+    #print "I have Got following "+str(list_d)
     win.pushFolderArgv(list_d)
