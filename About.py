@@ -20,13 +20,13 @@ cellpadding="0" border="1">
 </tr>
 </table>
 
-<p><b>SubDown</b> is a Python Application for downloading Subtitles for Movies and Serials</p>
+<p><b>SubDown</b> is a Python Application for downloading <br>Subtitles for Movies and Serials.</p>
 
-<p></p>
+<p>Visit  <b>https://sainyamkapoor.github.io/subdown</b> for more info and to download updated version.</p>
 
 <p><b>SubDown</b> is brought to you by <b>Sainyam Kapoor</b> <br>Copyright (c) 2014.</p>
 
-<p>
+<p><br>
 <font size="-1">Please see <i>license.txt</i> for licensing information.</font>
 </p>
 
