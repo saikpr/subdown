@@ -27,7 +27,7 @@ class TestListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         self.list_data = list_Data
         tID = wx.NewId()
         self.session_token=session_token
-        prompt = wx.StaticText(self, -1, '\nPlease Select The most Appropriate SRT file As Available from Opensubtiles\n\n')
+        prompt = wx.StaticText(self, -1, '\n Please Select The most Appropriate SRT file As Available from Opensubtiles\n\n')
         box1 = wx.BoxSizer(wx.HORIZONTAL)
         box1.Add(prompt, 0, wx.ALIGN_CENTER)
         #box1.Add(self.cmd, 1, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT, 5)

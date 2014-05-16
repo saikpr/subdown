@@ -177,7 +177,7 @@ class TestPanel(wx.Panel):
             self.path=argvs[1]
             self.argvs=argvs[2:]
         #buttons and text
-        prompt = wx.StaticText(self, -1, 'File Name:')
+        prompt = wx.StaticText(self, -1, 'Name:')
         
         self.cmd = wx.TextCtrl(self, -1, self.path,style=wx.TE_READONLY)
         self.out = wx.TextCtrl(self, -1, '',style=wx.TE_MULTILINE|wx.TE_READONLY|wx.TE_RICH2)
@@ -236,6 +236,7 @@ class TestPanel(wx.Panel):
     def startdown(self,evt):
         #code start
         #print evt
+        self.Strtbtn.Enable(False)
         self.out.AppendText("[SubDown]:Trying to Download Subtitles for \n"+self.path.split("\\")[-1]+'.\n')
         hash_data = get_hash(self.path)
         filename=self.path.split('\\')[-1]

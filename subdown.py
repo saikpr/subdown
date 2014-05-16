@@ -1,5 +1,5 @@
 import wx
-import time
+#import time
 import sys, os
 import  wx.lib.layoutf  as layoutf
 from subdown_version import __version__
@@ -99,20 +99,20 @@ class Run_GUI(wx.App,):
     def disp0(self,evt):
         
         testing=0
-        self.frame.Hide()
+        #self.frame.Hide()
         self.frame=self.frame0
         self.frame.Show()
         #frame0. 
-        self.SetTopWindow(frame0)
+        self.SetTopWindow(self.frame)
     
     def disp2(self,evt):
-        
+        print "triggererers"
         testing=2
-        self.frame.Hide()
+        #self.frame.Hide()
         self.frame=self.frame2
-        self.frame2.Show()
+        #self.frame2.Show()
         #frame2.
-        self.SetTopWindow(frame2)
+        self.SetTopWindow(self.frame)
 
     def onAboutSubdown(self,evt):
         self.dlg.ShowModal()

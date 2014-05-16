@@ -5,7 +5,7 @@ from subdown_version import __version__
 class TestPanel(wx.Panel):
     def __init__(self, parent_frame, ID):
         wx.Panel.__init__(self, parent_frame, ID)
-        introstr=""" Subdown"""
+        introstr="""                      Subdown v"""+__version__+"\n\n To Download Srt for a particular file.\n Select the file from following option:"
         prompt = wx.StaticText(self, -1, introstr)
         box1 = wx.BoxSizer(wx.HORIZONTAL)
         box1.Add(prompt, 0, wx.ALIGN_CENTER)
@@ -16,13 +16,17 @@ class TestPanel(wx.Panel):
         self.dbb = filebrowse.DirBrowseButton(
             self, -1, size=(450, -1), changeCallback = self.dbbCallback,  buttonText="Download Srt", labelText="Select Folder"
             )
-
+        introstr="\nTo Download Srt for all files in a Folder Select following \noption:"
+        prompt1 = wx.StaticText(self, -1, introstr)
+        box2 = wx.BoxSizer(wx.HORIZONTAL)
+        box2.Add(prompt1, 0, wx.ALIGN_CENTER)
         #self.fbbh.callCallback = True
         #self.fbbh.SetHistory([], 4)
         self.parent_frame=parent_frame
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(box1, 0, wx.EXPAND|wx.ALL, 10)
         sizer.Add(self.fbbh, 0, wx.ALL, 5)
+        sizer.Add(box2, 0, wx.EXPAND|wx.ALL, 10)
         sizer.Add(self.dbb, 0, wx.ALL, 5)
         box = wx.BoxSizer()
         box.Add(sizer, 0, wx.ALL, 20)
