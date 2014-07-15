@@ -158,7 +158,7 @@ class openSubThread(threading.Thread):
                 
                 self.parent.startdown(None)
             except IndexError:
-                self.parentStrtbtn.Enable(False)
+                self.parent.Strtbtn.Enable(False)
                 self.parentsndBtn.Enable(True)
                 self.out.AppendText("\n[SubDown]:Completed\n\n************************************************\n")
 
